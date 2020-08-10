@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Maxov.Otus.RestAndOdata.DAL.Abstractions\Maxov.Otus.RestAndOdata.DAL.Abstractions.csproj" />
+      <ProjectReference Include="..\Maxov.Otus.RestAndOdata.DAL.Models\Maxov.Otus.RestAndOdata.DAL.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Mapster" Version="6.1.1" />
+    </ItemGroup>
+
+</Project>

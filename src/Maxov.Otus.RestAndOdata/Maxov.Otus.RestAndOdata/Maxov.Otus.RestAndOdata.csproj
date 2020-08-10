@@ -10,5 +10,18 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FastExpressionCompiler" Version="2.0.0" />
+      <PackageReference Include="Mapster" Version="6.1.1" />
+      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BLL\Maxov.Otus.RestAndOdata.BLL.Abstractions\Maxov.Otus.RestAndOdata.BLL.Abstractions.csproj" />
+      <ProjectReference Include="..\BLL\Maxov.Otus.RestAndOdata.BLL\Maxov.Otus.RestAndOdata.BLL.csproj" />
+      <ProjectReference Include="..\DAL\Maxov.Otus.RestAndOdata.DAL.Models\Maxov.Otus.RestAndOdata.DAL.Models.csproj" />
+      <ProjectReference Include="..\DAL\Maxov.Otus.RestAndOdata.DAL\Maxov.Otus.RestAndOdata.DAL.csproj" />
+    </ItemGroup>
+
 
 </Project>

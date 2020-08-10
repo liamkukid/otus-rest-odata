@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MapsterMapper;
+using Maxov.Otus.RestAndOdata.BLL.Abstractions.Services;
+using Maxov.Otus.RestAndOdata.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Maxov.Otus.RestAndOdata.Controllers
 {
@@ -11,24 +12,31 @@ namespace Maxov.Otus.RestAndOdata.Controllers
     [Route("api/football-manager/[controller]")]
     public class ChampionshipsController : ControllerBase
     {
-        private readonly List<Сhampionship> _championships = new List<Сhampionship>
+        private readonly IChampionshipService _championatService;
+        private readonly IMapper _mapper;
+
+        public ChampionshipsController(IChampionshipService championshipService, IMapper mapper)
         {
-            new Сhampionship {Id = 1, Country = "England", OfficialName = "English Premier League"},
-            new Сhampionship {Id = 2, Country = "England", OfficialName = "English Football League Championship"},
-            new Сhampionship {Id = 3, Country = "Russia", OfficialName = "Russian Premier League"},
-            new Сhampionship {Id = 4, Country = "Spain", OfficialName = "Campeonato Nacional de Liga de Primera División"}
-        };
+            _championatService = championshipService ?? throw new ArgumentNullException(nameof(championshipService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(championshipService));
+        }
 
         [HttpGet]
-        public IEnumerable<Сhampionship> Get()
+        public async Task<ChampionshipsContainerViewModel> GetAsync(CancellationToken cancellationToken = default)
         {
-            return _championships;
+            var championships = await _championatService.GetAllAsync(cancellationToken);
+            var container = _mapper.From(championships).AdaptToType<ChampionshipsContainerViewModel>();
+
+            return container;
         }
-        
+
         [HttpGet("{id}")]
-        public Сhampionship Get(int id)
+        public async Task<ChampionshipViewModel> Get(int id, CancellationToken cancellationToken = default)
         {
-            return _championships.FirstOrDefault(x => x.Id == id);
+            var championship = await _championatService.GetAsync(id, cancellationToken);
+            var viewModel = _mapper.From(championship).AdaptToType<ChampionshipViewModel>();
+
+            return viewModel;
         }
     }
 }
