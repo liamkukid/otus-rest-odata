@@ -36,7 +36,7 @@ namespace Maxov.Otus.RestAndOdata
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpMethodOverride();
 
             app.UseRouting();
 
