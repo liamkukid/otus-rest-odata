@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using FastExpressionCompiler;
 using Mapster;
 using MapsterMapper;
@@ -16,6 +19,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace Maxov.Otus.RestAndOdata
 {
@@ -38,7 +42,25 @@ namespace Maxov.Otus.RestAndOdata
 
             services.AddSingleton<IChampionshipService, ChampionshipService>();
             
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Football Manager API",
+                    Description = "A simple example ASP.NET Core Web API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Maxim Ovchinnikov",
+                        Email = "footballmanager@ovchinnikov.ma",
+                        Url = new Uri("https://www.facebook.com/max.ovchinnikov/"),
+                    }
+                });
+                
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             RegisterCommonMapping(services);
         }
@@ -54,11 +76,14 @@ namespace Maxov.Otus.RestAndOdata
 
             app.UseAuthorization();
             
+            app.UseStaticFiles();
             app.UseSwagger();
             
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Football Manager");
+                c.InjectStylesheet("/swagger-ui/custom.css");
+                c.RoutePrefix = string.Empty;
             });
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
