@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -16,6 +17,14 @@ namespace Maxov.Otus.RestAndOdata.ErrorHandling
                 context.Result = new ObjectResult(exception.Value)
                 {
                     StatusCode = exception.Status
+                };
+                context.ExceptionHandled = true;
+            }
+            else
+            {
+                context.Result = new ObjectResult(context.Exception.Message)
+                {
+                    StatusCode = StatusCodes.Status500InternalServerError
                 };
                 context.ExceptionHandled = true;
             }

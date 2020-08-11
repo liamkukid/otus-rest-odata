@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MapsterMapper;
@@ -10,7 +9,6 @@ using Maxov.Otus.RestAndOdata.Models;
 using Maxov.Otus.RestAndOdata.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace Maxov.Otus.RestAndOdata.Controllers
 {
@@ -38,6 +36,7 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         /// <returns>Контейнер, содержащий список с базовой информацией о футбольных турнирах</returns>
         /// <response code="200">Запрос выполнился успешно, возвращены данные</response>
         /// <response code="204">Запрос выполнился успешно, но данные не найдены</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -60,6 +59,7 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         /// <returns>Подробная информация о запрашиваемом футбольном турнире</returns>
         /// <response code="200">Запрос выполнился успешно, возвращены данные</response>
         /// <response code="404">Данные не найдены</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -101,6 +101,8 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         ///     }
         /// </remarks>
         /// <response code="200">Запрос выполнился успешно, создана запись</response>
+        /// <response code="400">Некорректные данные</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpPost]
         public async Task CreateAsync(ChampionshipCreateModel model, CancellationToken cancellationToken = default)
         {
