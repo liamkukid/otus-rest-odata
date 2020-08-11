@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MapsterMapper;
 using Maxov.Otus.RestAndOdata.BLL.Abstractions.Services;
+using Maxov.Otus.RestAndOdata.BLL.Models;
 using Maxov.Otus.RestAndOdata.ErrorHandling;
 using Maxov.Otus.RestAndOdata.Models;
 using Maxov.Otus.RestAndOdata.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Maxov.Otus.RestAndOdata.Controllers
 {
@@ -74,6 +77,36 @@ namespace Maxov.Otus.RestAndOdata.Controllers
             var viewModel = _mapper.From(championship).AdaptToType<ChampionshipViewModel>();
 
             return viewModel;
+        }
+
+        /// <summary>
+        ///     Создает новые записи о футбольном турнире и о командах, участвующих в нем
+        /// </summary>
+        /// <remarks>
+        ///     Sample request:
+        ///     POST /api/footbal-manager/championships/
+        ///     {
+        ///        "OfficialName":"Le championnat de France de football",
+        ///        "Country":"France",
+        ///        "Teams":[
+        ///           {
+        ///              "OfficialName":"Amiens",
+        ///              "Location":"Amiens"
+        ///           },
+        ///           {
+        ///              "OfficialName":"Angers",
+        ///              "Location":"Angers"
+        ///           }
+        ///        ]
+        ///     }
+        /// </remarks>
+        /// <response code="200">Запрос выполнился успешно, создана запись</response>
+        [HttpPost]
+        public async Task CreateAsync(ChampionshipCreateModel model, CancellationToken cancellationToken = default)
+        {
+            var championship = _mapper.From(model).AdaptToType<Championship>();
+
+            await _championatService.CreateAsync(championship, cancellationToken);
         }
     }
 }

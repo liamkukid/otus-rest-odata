@@ -12,7 +12,7 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
     {
         private readonly IMapper _mapper;
 
-        private readonly IReadOnlyDictionary<long, List<TeamEntity>> _teamsByChampionship;
+        private readonly IDictionary<long, List<TeamEntity>> _teamsByChampionship;
 
         public ChampionshipsRepository(FootballManagerDbContext dbContext, IMapper mapper) : base(dbContext)
         {
@@ -26,7 +26,8 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
             CancellationToken cancellationToken = default)
         {
             var result = DbContext.Championships
-                .Select(c => Build(c)).ToList();
+                .Select(Build)
+                .ToList();
 
             return await Task.FromResult(result);
         }
@@ -47,7 +48,7 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            var teams = entity.Teams.ToArray();
+            var teams = entity.Teams.ToList();
             entity.Teams = new TeamEntity[0];
 
             entity.Id = DbContext.Championships.Max(x => x.Id) + 1;
@@ -58,7 +59,10 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
             {
                 teamEntity.Id = DbContext.Teams.Max(x => x.Id) + 1;
                 teamEntity.СhampionshipId = entity.Id;
+                DbContext.Teams.Add(teamEntity);
             }
+
+            _teamsByChampionship.Add(entity.Id, teams);
             
             return Task.CompletedTask;
         }
