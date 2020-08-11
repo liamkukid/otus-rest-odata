@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -12,15 +13,15 @@ namespace Maxov.Otus.RestAndOdata.ErrorHandling
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            if (context.Exception is HttpResponseException exception)
+            if (context.Exception is HttpResponseException httpResponseException)
             {
-                context.Result = new ObjectResult(exception.Value)
+                context.Result = new ObjectResult(httpResponseException.Value)
                 {
-                    StatusCode = exception.Status
+                    StatusCode = httpResponseException.Status
                 };
                 context.ExceptionHandled = true;
             }
-            else
+            else if (context.Exception != null)
             {
                 context.Result = new ObjectResult(context.Exception.Message)
                 {

@@ -1,9 +1,9 @@
-namespace Maxov.Otus.RestAndOdata.ViewModels
+namespace Maxov.Otus.RestAndOdata.ViewModels.V3
 {
     /// <summary>
     ///     Базовая информация о футбольном турнире
     /// </summary>
-    public sealed class ChampionshipShortViewModel
+    public sealed class ChampionshipShortV3ViewModel
     {
         /// <summary>
         ///     Идентификатор футбольного турнира
@@ -19,10 +19,5 @@ namespace Maxov.Otus.RestAndOdata.ViewModels
         ///     Страна проведения футбольного турнира
         /// </summary>
         public string Country { get; set; }
-
-        /// <summary>
-        ///     Количество команда, принимающих участие в футбольном турнире
-        /// </summary>
-        public int TeamsCount { get; set; }
     }
 }

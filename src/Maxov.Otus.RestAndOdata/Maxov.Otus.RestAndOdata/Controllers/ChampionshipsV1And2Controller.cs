@@ -7,6 +7,7 @@ using Maxov.Otus.RestAndOdata.BLL.Models;
 using Maxov.Otus.RestAndOdata.ErrorHandling;
 using Maxov.Otus.RestAndOdata.Models;
 using Maxov.Otus.RestAndOdata.ViewModels;
+using Maxov.Otus.RestAndOdata.ViewModels.BeforeV3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +15,15 @@ namespace Maxov.Otus.RestAndOdata.Controllers
 {
     [Produces("application/json")]
     [ApiController]
-    [Route("api/football-manager/[controller]")]
-    public class ChampionshipsController : ControllerBase
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("2.0")]
+    [Route("api/football-manager/v{v:apiVersion}/championships")]
+    public class ChampionshipsV1And2Controller : ControllerBase
     {
         private readonly IChampionshipService _championatService;
         private readonly IMapper _mapper;
 
-        public ChampionshipsController(IChampionshipService championshipService, IMapper mapper)
+        public ChampionshipsV1And2Controller(IChampionshipService championshipService, IMapper mapper)
         {
             _championatService = championshipService ?? throw new ArgumentNullException(nameof(championshipService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(championshipService));
@@ -31,7 +34,9 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         /// </summary>
         /// <remarks>
         ///     Sample request:
-        ///     GET /api/footbal-manager/championships/
+        ///     GET /api/footbal-manager/v1.0/championships/
+        ///     or
+        ///     GET /api/footbal-manager/v2.0/championships/
         /// </remarks>
         /// <returns>Контейнер, содержащий список с базовой информацией о футбольных турнирах</returns>
         /// <response code="200">Запрос выполнился успешно, возвращены данные</response>
@@ -40,10 +45,10 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ChampionshipsContainerViewModel> GetAsync(CancellationToken cancellationToken = default)
+        public async Task<ChampionshipsContainerBeforeV3ViewModel> GetAsync(CancellationToken cancellationToken = default)
         {
             var championships = await _championatService.GetAllAsync(cancellationToken);
-            var container = _mapper.From(championships).AdaptToType<ChampionshipsContainerViewModel>();
+            var container = _mapper.From(championships).AdaptToType<ChampionshipsContainerBeforeV3ViewModel>();
 
             return container;
         }
@@ -53,7 +58,9 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         /// </summary>
         /// <remarks>
         ///     Sample request:
-        ///     GET /api/footbal-manager/championships/:id
+        ///     GET /api/footbal-manager/v1.0/championships/:id
+        ///     or
+        ///     GET /api/footbal-manager/v2.0/championships/:id
         /// </remarks>
         /// <param name="id">Идентификатор футбольного турнира</param>
         /// <returns>Подробная информация о запрашиваемом футбольном турнире</returns>
@@ -84,7 +91,9 @@ namespace Maxov.Otus.RestAndOdata.Controllers
         /// </summary>
         /// <remarks>
         ///     Sample request:
-        ///     POST /api/footbal-manager/championships/
+        ///     POST /api/footbal-manager/v1.0/championships/
+        ///     or
+        ///     POST /api/footbal-manager/v2.0/championships/
         ///     {
         ///        "OfficialName":"Le championnat de France de football",
         ///        "Country":"France",
