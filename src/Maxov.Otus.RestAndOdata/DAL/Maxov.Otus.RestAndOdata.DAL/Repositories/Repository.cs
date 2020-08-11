@@ -13,7 +13,7 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
     {
         protected readonly FootballManagerDbContext DbContext;
 
-        public Repository(FootballManagerDbContext dbContext)
+        protected Repository(FootballManagerDbContext dbContext)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
@@ -21,5 +21,7 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
         public abstract Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
         public abstract Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default);
+
+        public abstract Task CreateAsync(ChampionshipEntity entity, CancellationToken cancellationToken = default);
     }
 }

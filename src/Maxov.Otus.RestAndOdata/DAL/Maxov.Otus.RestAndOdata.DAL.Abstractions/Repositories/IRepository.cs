@@ -9,8 +9,9 @@ namespace Maxov.Otus.RestAndOdata.DAL.Abstractions.Repositories
         where TEntity : EntityBase<TId>
         where TId : struct
     {
-        public Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
-        public Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default);
+        Task CreateAsync(ChampionshipEntity entity, CancellationToken cancellationToken = default);
     }
 }

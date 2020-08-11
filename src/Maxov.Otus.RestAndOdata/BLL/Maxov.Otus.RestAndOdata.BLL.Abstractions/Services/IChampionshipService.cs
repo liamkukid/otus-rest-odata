@@ -9,5 +9,6 @@ namespace Maxov.Otus.RestAndOdata.BLL.Abstractions.Services
     {
         public Task<IReadOnlyList<Championship>> GetAllAsync(CancellationToken cancellationToken = default);
         public Task<Championship> GetAsync(long id, CancellationToken cancellationToken = default);
+        public Task CreateAsync(Championship championship, CancellationToken cancellationToken = default);
     }
 }

@@ -13,6 +13,7 @@ using Maxov.Otus.RestAndOdata.DAL;
 using Maxov.Otus.RestAndOdata.DAL.Abstractions.Repositories;
 using Maxov.Otus.RestAndOdata.DAL.Models.Entities;
 using Maxov.Otus.RestAndOdata.DAL.Repositories;
+using Maxov.Otus.RestAndOdata.ErrorHandling;
 using Maxov.Otus.RestAndOdata.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,13 +36,14 @@ namespace Maxov.Otus.RestAndOdata
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+                options.Filters.Add(new HttpResponseExceptionFilter()));
 
             services.AddSingleton<FootballManagerDbContext>();
             services.AddSingleton<IRepository<long, ChampionshipEntity>, ChampionshipsRepository>();
 
             services.AddSingleton<IChampionshipService, ChampionshipService>();
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -53,10 +55,10 @@ namespace Maxov.Otus.RestAndOdata
                     {
                         Name = "Maxim Ovchinnikov",
                         Email = "footballmanager@ovchinnikov.ma",
-                        Url = new Uri("https://www.facebook.com/max.ovchinnikov/"),
+                        Url = new Uri("https://www.facebook.com/max.ovchinnikov/")
                     }
                 });
-                
+
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -75,10 +77,10 @@ namespace Maxov.Otus.RestAndOdata
             app.UseRouting();
 
             app.UseAuthorization();
-            
+
             app.UseStaticFiles();
             app.UseSwagger();
-            
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Football Manager");
@@ -101,7 +103,7 @@ namespace Maxov.Otus.RestAndOdata
 
             config.NewConfig<Championship, ChampionshipShortViewModel>()
                 .Map(x => x.TeamsCount, x => x.Teams.Count);
-            
+
             config.NewConfig<Championship, ChampionshipViewModel>()
                 .Map(x => x.Teams, x => x.Teams);
 

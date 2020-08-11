@@ -43,6 +43,26 @@ namespace Maxov.Otus.RestAndOdata.DAL.Repositories
             return await Task.FromResult(result);
         }
 
+        public override Task CreateAsync(ChampionshipEntity entity, CancellationToken cancellationToken = default)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            var teams = entity.Teams.ToArray();
+            entity.Teams = new TeamEntity[0];
+
+            entity.Id = DbContext.Championships.Max(x => x.Id) + 1;
+
+            DbContext.Championships.Add(entity);
+
+            foreach (var teamEntity in teams)
+            {
+                teamEntity.Id = DbContext.Teams.Max(x => x.Id) + 1;
+                teamEntity.СhampionshipId = entity.Id;
+            }
+            
+            return Task.CompletedTask;
+        }
+
         private ChampionshipEntity Build(ChampionshipEntity source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

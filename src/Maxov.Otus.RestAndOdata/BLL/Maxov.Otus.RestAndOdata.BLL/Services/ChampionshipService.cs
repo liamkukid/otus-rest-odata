@@ -34,5 +34,13 @@ namespace Maxov.Otus.RestAndOdata.BLL.Services
             var result = _mapper.From(entity).AdaptToType<Championship>();
             return result;
         }
+
+        public async Task CreateAsync(Championship championship, CancellationToken cancellationToken = default)
+        {
+            if (championship == null) throw new ArgumentNullException(nameof(championship));
+            var entity = _mapper.From(championship).AdaptToType<ChampionshipEntity>();
+
+            await _repository.CreateAsync(entity, cancellationToken);
+        }
     }
 }
