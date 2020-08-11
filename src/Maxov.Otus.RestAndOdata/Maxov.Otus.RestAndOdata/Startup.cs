@@ -37,6 +37,8 @@ namespace Maxov.Otus.RestAndOdata
             services.AddSingleton<IRepository<long, ChampionshipEntity>, ChampionshipsRepository>();
 
             services.AddSingleton<IChampionshipService, ChampionshipService>();
+            
+            services.AddSwaggerGen();
 
             RegisterCommonMapping(services);
         }
@@ -51,6 +53,13 @@ namespace Maxov.Otus.RestAndOdata
             app.UseRouting();
 
             app.UseAuthorization();
+            
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Football Manager");
+            });
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
